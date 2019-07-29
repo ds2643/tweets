@@ -1,9 +1,10 @@
 (ns tweets.main
   "Entry-point for running tweets server"
   (:require
-   [tweets.server :refer [run-server]]))
+   [tweets.server :refer [run-server]])
+  (:gen-class))
 
-;; TODO: add logic to start consumer
+;; add consumer once development ends
 (defn -main [& args]
   (let [server-port
         ;; TODO: note default in documentation

@@ -1,5 +1,6 @@
 (defproject tweets "0.1.0-SNAPSHOT"
-  :description "REST service allowing persistence and querying of tweets."
+  :description "Service allowing persistence and querying of tweets."
+
   :dependencies
   [[cheshire "5.8.1"]
    [clj-http "3.9.1"]
@@ -13,16 +14,12 @@
    [re-rand "0.1.0"]
    [ring/ring-jetty-adapter "1.4.0"]
    [ring/ring-json "0.4.0"]
-
-   ;; TODO: choose one of two
    [twitter-api "1.8.0"]
-   ;; TODO: vet through testing
-   [twitter-streaming-client "0.3.3"]
-   [twttr "3.2.2"]]
+   [twitter-streaming-client "0.3.3"]]
 
   :aliases
-  {"migrate"        ["run" "-m" "tweets.migration/migrate"]
-   "rollback"       ["run" "-m" "tweets.migration/rollback"]}
+  {"migrate"  ["run" "-m" "tweets.migration/migrate"]
+   "rollback" ["run" "-m" "tweets.migration/rollback"]}
 
   :main tweets.main
   :profiles

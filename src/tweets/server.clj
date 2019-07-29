@@ -16,7 +16,7 @@
         (let [user-info (get-in req [:body :user-info])]
           (users/sign-up user-info db/test-db)))
 
-  ;; TODO: get?
+  ;; TODO: `GET`?
   (POST "/sign-in" req
         (let [user-info (get-in req [:body :user-info])]
           (users/sign-in user-info db/test-db)))

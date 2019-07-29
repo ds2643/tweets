@@ -13,11 +13,11 @@
    [honeysql.helpers :as helpers]
    [tweets.db :as db]))
 
-;; TODO: use in filtering
 (defn find-hashtags [text]
-  (into #{} (re-seq #"\#\w+"text)))
+  (into #{} (re-seq #"\#\w+" text)))
 
 ;; TODO: manage test credentials
+;; TODO: clean!
 (def my-creds
   (let [app-consumer-key         "IuTTfeKRMK0390EXVTM3uKCEV"
         app-consumer-secret      "WGMqWzkTWAYWtMmdL4g19NNGK5ljXlkC9yDdHBJ8TNCwrEJrPJ"
