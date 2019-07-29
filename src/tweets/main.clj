@@ -7,7 +7,7 @@
 ;; add consumer once development ends
 (defn -main [& args]
   (let [server-port
-        ;; TODO: note default in documentation
+        ;; TODO: Note default in documentation
         (if-let [env-port (System/getenv "API_PORT")]
           (Integer/parseInt env-port)
           3666)]

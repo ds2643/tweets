@@ -1,3 +1,4 @@
+;; TODO: note inability to kill consumer in issues
 (ns tweets.consumer
   "Implements logic for consuming twitter feed, filtering for hashtags,
   and persistence of tweet data."
@@ -27,39 +28,23 @@
                             user-access-token user-access-token-secret)))
 
 ;; TODO: normalize use of hyphen
+;; TODO: note the possibility of making configurable
 (def hash-tags #{"tech" "funny" "photography"})
 
-;; TODO: will get duped by something like #technews
 (defn make-hashtag-filter [hash-tags]
   (let [ht (into #{} (map (partial str "#") hash-tags))]
     (fn includes-hashtags? [text]
-      (boolean (seq (set/intersection ht (find-hashtags text))))))
-
-  #_
-  (let [with-sym (mapv (partial str "#") hash-tags)]
-    (fn includes-hashtags? [text]
-      ;; TODO:  better off with something like...
-      ;;       "the overlapping set of hashtags is not empty"
-      (boolean (some (partial str/includes? text) with-sym)))))
+      (boolean (seq (set/intersection ht (find-hashtags text)))))))
 
 #_
 (let [my-filter (make-hashtag-filter hash-tags)]
   (my-filter "hello #tech"))
 
-(def search-perams
-  {:track (str/join "," hash-tags)})
-
-;; TODO: wrap in public api
 (defn make-stream []
-  (client/create-twitter-stream tstreaming/statuses-filter
-                                :oauth-creds my-creds
-                                :params search-perams))
-
-#_
-(def stream (make-stream))
-
-#_
-(client/start-twitter-stream stream)
+  (let [search-params {:track (str/join "," hash-tags)}]
+    (client/create-twitter-stream tstreaming/statuses-filter
+                                  :oauth-creds my-creds
+                                  :params search-params)))
 
 (defn process-tweets [tweets]
   (for [{:keys [user created_at text]} tweets]
@@ -79,31 +64,6 @@
          process-tweets)))
 
 #_
-(first (get-filtered-tweets stream))
-
-
-;; TODO: cancel the client : stop collecting tweets
-#_
-(client/cancel-twitter-stream stream)
-
-#_
-(.close debug-file)
-
-;; TODO: add async?
-;; TODO: deprecate
-#_
-(defn consume-tweets []
-  (let [stream (make-stream)]
-    (do (client/start-twitter-stream stream)
-        ;; TODO: routinely poll for changes and update accordingly
-        ;; TODO: scaffold with println
-        (doseq [n (range 100000)]
-          (Thread/sleep 500)
-          (let [tweets (get-filtered-tweets stream)]
-            (doseq [t tweets]
-              (spit (io/file "hello.txt") (str t "\n") :append true)))))))
-
-#_
 (def example-tweet
   {:author "Lucas19082", :date-created "Sun Jul 28 04:00:59 +0000 2019", :text "RT @NerolRose: Glow\n\nBy @normyip \n#maleportrait #photography #malephotography #art #sensuality #youth #muscles #asianhunk #AsianEarpers #as…", :hash-tags #{"#youth" "#art" "#photography" "#as" "#AsianEarpers" "#maleportrait" "#sensuality" "#asianhunk" "#muscles" "#malephotography"}})
 
@@ -111,7 +71,6 @@
   [{:as tweet :keys [author date-created text hash-tags]}
    db-connection]
   (let [format-hashtags (partial str/join ",")
-        ;; TODO: make a tweets table
         table           :tweets
         tweet-id        (db/create-random-id table db-connection)
         tweet-data      {:id          tweet-id
@@ -127,11 +86,17 @@
 #_
 (add-tweet-to-db example-tweet db/test-db)
 
-;; TODO: add docstring
+;; TODO: add doc-string
 ;; TODO: integrate upwards
 (defn collect-tweets []
   (let [stream (make-stream)]
     (do (client/start-twitter-stream stream)
+        ;; TODO: requires concurrency solution
+        (doseq [n (range)]
+          (Thread/sleep 500)
+          (doseq [tweet (get-filtered-tweets stream)]
+            (add-tweet-to-db tweet db/test-db)))
+        #_
         (future
           (fn []
             (doseq [n (range)]
@@ -141,4 +106,4 @@
 
 #_
 (collect-tweets)
-
+1

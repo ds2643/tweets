@@ -2,7 +2,8 @@
   :description "Service allowing persistence and querying of tweets."
 
   :dependencies
-  [[cheshire "5.8.1"]
+  [[buddy/buddy-auth "2.2.0"]
+   [cheshire "5.8.1"]
    [clj-http "3.9.1"]
    [compojure "1.6.1"]
    [honeysql "0.9.4"]
