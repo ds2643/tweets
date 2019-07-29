@@ -6,7 +6,6 @@
    [honeysql.helpers :as helpers]
    [tweets.db :as db]))
 
-
 (defn get-question-ids
   "Returns collection of ids associated with all existing questions."
   [db-connection]
@@ -47,7 +46,7 @@
                            :password password}])
                         sql/format)
         outcome     (jdbc/execute! db-connection statement)]
-    email))
+    new-user-id))
 
 #_
 (let [user-config
@@ -67,10 +66,39 @@
 
         :else (create-user user-info db-connection)))
 
+(defn get-all-tweet-content [db-connection]
+  (let [query (sql/format {:select [:author :hashtags :text :datecreated]
+                           :from   [:tweets]})]
+    (into [] (jdbc/query db-connection query))))
+
+;; TODO: handle empty query
+(defn get-user-id [user-info db-connection]
+  (let [query (sql/format {:select [:id]
+                           :from   [:users]
+                           :where  [:= :email (:email user-info)]})]
+    (-> db-connection
+        (jdbc/query query)
+        first :id)))
+
+#_
+(get-user-id {:email "d@a.coim"} db/test-db)
+
+
+(defn valid-id? [id db-connection]
+  (let [body  {:select [:id]
+               :from   [:users]
+               :where  [:= :id id]}
+        query (sql/format body)]
+    (-> db-connection
+        (jdbc/query query)
+        seq boolean)))
+
+#_
+(valid-id? "bwfNr-Gk7sC-WAQbb" db/test-db)
 
 (defn sign-in
   [{:keys [email password] :as user-info} db-connection]
   ;; Use `cond` as above to address incomplete user-info case
   (if (user-exists? user-info db-connection)
-    email
+    (get-user-id user-info db-connection)
     (throw (Exception. "User does not exist!"))))

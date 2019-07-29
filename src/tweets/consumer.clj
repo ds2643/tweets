@@ -1,4 +1,5 @@
 ;; TODO: note inability to kill consumer in issues
+;; TODO: note concurrency bug
 (ns tweets.consumer
   "Implements logic for consuming twitter feed, filtering for hashtags,
   and persistence of tweet data."
@@ -106,4 +107,3 @@
 
 #_
 (collect-tweets)
-1
