@@ -3,8 +3,6 @@
    [clojure.java.jdbc :as jdbc]
    [re-rand :refer [re-rand]]))
 
-;; TODO: migrate from dbscratch
-
 (def test-db
   {:classname   "org.sqlite.JDBC"
    :subprotocol "sqlite"

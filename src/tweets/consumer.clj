@@ -1,5 +1,4 @@
 ;; TODO: note inability to kill consumer in issues
-;; TODO: note concurrency bug
 (ns tweets.consumer
   "Implements logic for consuming twitter feed, filtering for hashtags,
   and persistence of tweet data."
@@ -28,21 +27,20 @@
     (oauth/make-oauth-creds app-consumer-key  app-consumer-secret
                             user-access-token user-access-token-secret)))
 
-;; TODO: normalize use of hyphen
 ;; TODO: note the possibility of making configurable
-(def hash-tags #{"tech" "funny" "photography"})
+(def hashtags #{"tech" "funny" "photography"})
 
-(defn make-hashtag-filter [hash-tags]
-  (let [ht (into #{} (map (partial str "#") hash-tags))]
+(defn make-hashtag-filter [hashtags]
+  (let [ht (into #{} (map (partial str "#") hashtags))]
     (fn includes-hashtags? [text]
       (boolean (seq (set/intersection ht (find-hashtags text)))))))
 
 #_
-(let [my-filter (make-hashtag-filter hash-tags)]
+(let [my-filter (make-hashtag-filter hashtags)]
   (my-filter "hello #tech"))
 
 (defn make-stream []
-  (let [search-params {:track (str/join "," hash-tags)}]
+  (let [search-params {:track (str/join "," hashtags)}]
     (client/create-twitter-stream tstreaming/statuses-filter
                                   :oauth-creds my-creds
                                   :params search-params)))
@@ -52,11 +50,11 @@
     {:author       (:screen_name user)
      :date-created created_at
      :text         text
-     :hash-tags    (find-hashtags text)}))
+     :hashtags    (find-hashtags text)}))
 
 ;; TODO: note ad-hoc filtering solution in issues
 (defn get-filtered-tweets [stream]
-  (let [includes-hashtags? (make-hashtag-filter hash-tags)
+  (let [includes-hashtags? (make-hashtag-filter hashtags)
         queue              (client/retrieve-queues stream)
         in-english?        #(= (:lang %) "en")]
     (->> (:tweet queue)
@@ -66,16 +64,16 @@
 
 #_
 (def example-tweet
-  {:author "Lucas19082", :date-created "Sun Jul 28 04:00:59 +0000 2019", :text "RT @NerolRose: Glow\n\nBy @normyip \n#maleportrait #photography #malephotography #art #sensuality #youth #muscles #asianhunk #AsianEarpers #as…", :hash-tags #{"#youth" "#art" "#photography" "#as" "#AsianEarpers" "#maleportrait" "#sensuality" "#asianhunk" "#muscles" "#malephotography"}})
+  {:author "Lucas19082", :date-created "Sun Jul 28 04:00:59 +0000 2019", :text "RT @NerolRose: Glow\n\nBy @normyip \n#maleportrait #photography #malephotography #art #sensuality #youth #muscles #asianhunk #AsianEarpers #as…", :hashtags #{"#youth" "#art" "#photography" "#as" "#AsianEarpers" "#maleportrait" "#sensuality" "#asianhunk" "#muscles" "#malephotography"}})
 
 (defn add-tweet-to-db
-  [{:as tweet :keys [author date-created text hash-tags]}
+  [{:as tweet :keys [author date-created text hashtags]}
    db-connection]
   (let [format-hashtags (partial str/join ",")
         table           :tweets
         tweet-id        (db/create-random-id table db-connection)
         tweet-data      {:id          tweet-id
-                         :hashtags    (format-hashtags hash-tags)
+                         :hashtags    (format-hashtags hashtags)
                          :author      author
                          :datecreated date-created
                          :text        text}

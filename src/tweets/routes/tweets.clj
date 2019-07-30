@@ -17,13 +17,10 @@
                            :from   [:tweets]})]
     (into [] (jdbc/query db-connection query))))
 
-#_
-(def example-tweets (get-all-tweet-content db/test-db))
-
 ;; TODO: note nothing is done with timestamp/text
 ;; TODO: write doc-string
 (defn query-tweets
-  [{:keys [text hashtag author] :as query-params}
+  [{:keys [hashtag author] :as query-params}
    db-connection]
   (cond->> (get-all-tweet-content db/test-db)
     hashtag (filter (partial includes-hashtag? hashtag))
