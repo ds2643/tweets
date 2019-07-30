@@ -77,8 +77,13 @@
                             sql/format)]
     (jdbc/execute! db-connection statement)))
 
-;; TODO: add doc-string
-(defn collect-tweets [db-connection]
+(defn collect-tweets
+  "Creates a subscription to the twitter streaming api that filters
+  for a set of predefined hashtags.
+
+  Selected content from these tweets is persisted in the database
+  associated with `db-connection`."
+  [db-connection]
   (let [stream (make-stream)]
     (do (client/start-twitter-stream stream)
         (future

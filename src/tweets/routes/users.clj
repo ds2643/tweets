@@ -38,17 +38,6 @@
         outcome     (jdbc/execute! db-connection statement)]
     new-user-id))
 
-;; TODO: add docstring
-(defn sign-up [{:keys [email password] :as user-info}
-               db-connection]
-  (cond (not (and email password))
-        (throw (Exception. "Incomplete user information supplied."))
-
-        (user-exists? user-info db-connection)
-        (throw (Exception. "User already exists!"))
-
-        :else (create-user user-info db-connection)))
-
 (defn get-all-tweet-content [db-connection]
   (let [query (sql/format {:select [:author :hashtags :text :datecreated]
                            :from   [:tweets]})]
@@ -72,9 +61,23 @@
         (jdbc/query query)
         seq boolean)))
 
-(defn sign-in
+(defn sign-up
+  "Creates an entry in `test-db` `user` table with data
+  supplied by user-info, returning the generated id."
   [{:keys [email password] :as user-info} db-connection]
-  ;; Use `cond` as above to address incomplete user-info case
+  (cond (not (and email password))
+        (throw (Exception. "Incomplete user information supplied."))
+
+        (user-exists? user-info db-connection)
+        (throw (Exception. "User already exists!"))
+
+        :else (create-user user-info db-connection)))
+
+(defn sign-in
+  "Searches `test-db` `user` table for match associated
+  with user-info, returning the generated id if successful."
+  [{:keys [email password] :as user-info} db-connection]
+  ;; TODO: Use `cond` as above to address incomplete user-info case
   (if (user-exists? user-info db-connection)
     (get-user-id user-info db-connection)
     (throw (Exception. "User does not exist!"))))
