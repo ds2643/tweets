@@ -1,13 +1,14 @@
 (ns tweets.main
   "Entry-point for running tweets server"
   (:require
-   [tweets.server :refer [run-server]])
+   [tweets.server :refer [run-server]]
+   [tweets.consumer :refer [collect-tweets]]
+   [tweets.db :as db])
   (:gen-class))
 
-;; add consumer once development ends
 (defn -main [& args]
+  (collect-tweets db/test-db)
   (let [server-port
-        ;; TODO: Note default in documentation
         (if-let [env-port (System/getenv "API_PORT")]
           (Integer/parseInt env-port)
           3666)]

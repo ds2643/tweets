@@ -15,6 +15,9 @@ Running in development requires several dependencies be installed on the local m
 
 Alternatively, ~docker-compose~ may be used to manage dependencies and run the project.
 
+*** Configuration
+# TODO: add twitter keys
+
 *** Running the project
 Running the project starts the collection of tweets by the project's ~consumer~ component. Tweets matching a set of predefined hashtags ("#tech", "#photography", and "#funny") are persisted in a local ~sqlite~ database. The querying of this database is supported by the ~tweets~ server, which implements ~jwt~ authentication.
 
@@ -70,7 +73,4 @@ Tests are run from the command-line as follows:
 lein test
 #+END_SRC
 
-
-
 # TODO: add design documentation
-** Design

@@ -88,22 +88,15 @@
 (add-tweet-to-db example-tweet db/test-db)
 
 ;; TODO: add doc-string
-;; TODO: integrate upwards
-(defn collect-tweets []
+(defn collect-tweets [db-connection]
   (let [stream (make-stream)]
     (do (client/start-twitter-stream stream)
         ;; TODO: requires concurrency solution
-        (doseq [n (range)]
-          (Thread/sleep 500)
-          (doseq [tweet (get-filtered-tweets stream)]
-            (add-tweet-to-db tweet db/test-db)))
-        #_
         (future
-          (fn []
-            (doseq [n (range)]
-              (Thread/sleep 500)
-              (doseq [tweet (get-filtered-tweets stream)]
-                (add-tweet-to-db tweet db/test-db))))))))
+          (doseq [n (range)]
+            (Thread/sleep 500)
+            (doseq [tweet (get-filtered-tweets stream)]
+              (add-tweet-to-db tweet db-connection)))))))
 
 #_
-(collect-tweets)
+(collect-tweets db/test-db)
