@@ -24,7 +24,7 @@
   (let [existing-users (get-existing-users db-connection)]
     (contains? existing-users email)))
 
-;; TODO: note issue: password should be stored securely
+;; TODO: Password should be stored securely... find a better solution
 (defn create-user [{:as user-info :keys [email password]}
                    db-connection]
   (let [table       :users
@@ -61,7 +61,6 @@
         (jdbc/query query)
         seq boolean)))
 
-;; TODO: test
 (defn password-valid?
   [{:as user-info :keys [email password]} db-connection]
   (let [body  {:select [:password]
@@ -87,7 +86,6 @@
 
         :else (create-user user-info db-connection)))
 
-;; TODO: check password
 (defn sign-in
   "Searches `test-db` `user` table for match associated
   with user-info, returning the generated id if successful."

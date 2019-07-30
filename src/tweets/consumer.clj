@@ -25,7 +25,7 @@
     (oauth/make-oauth-creds app-consumer-key  app-consumer-secret
                             user-access-token user-access-token-secret)))
 
-;; TODO: note the possibility of making configurable
+;; TODO: Note the possibility of making configurable
 (def hashtags #{"tech" "funny" "photography"})
 
 (defn make-hashtag-filter [hashtags]
@@ -46,7 +46,6 @@
      :text         text
      :hashtags    (find-hashtags text)}))
 
-;; TODO: note ad-hoc filtering solution in issues
 (defn get-filtered-tweets [stream]
   (let [includes-hashtags? (make-hashtag-filter hashtags)
         queue              (client/retrieve-queues stream)
