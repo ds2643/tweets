@@ -1,0 +1,76 @@
+* Tweets
+This repository contains a Clojure project supported by SQLite that persists and allows for the querying of tweets matching predefined hashtags.
+
+More specifically, the service does the following:
+  1. Collects tweets matching a set of predefined hashtags from the twitter streaming api.
+  2. Persists content from these tweets in a SQLite database.
+  3. Exposes a server featuring rudimentary authentication that allows the querying of these tweets.
+
+** Use
+*** Requirements
+Running in development requires several dependencies be installed on the local machine:
+1. ~leiningen~
+2. ~java~ version 8 or later
+3. [[https://www.sqlite.org/][~sqlite3~]]
+
+Alternatively, ~docker-compose~ may be used to manage dependencies and run the project.
+
+*** Running the project
+Running the project starts the collection of tweets by the project's ~consumer~ component. Tweets matching a set of predefined hashtags ("#tech", "#photography", and "#funny") are persisted in a local ~sqlite~ database. The querying of this database is supported by the ~tweets~ server, which implements ~jwt~ authentication.
+
+*** Database migration
+Schema migration is managed using a Clojure library called [`ragtime`](https://github.com/weavejester/ragtime), which is integrated into the Clojure project definition.
+
+To perform schema migration, run the following command from the root of the project directory:
+
+#+BEGIN_SRC bash
+lein migrate
+#+END_SRC
+
+Such schema migrations can be undone using the complementary command:
+
+#+BEGIN_SRC bash
+lein rollback
+#+END_SRC
+
+**** Development
+Start the project in development using evoking [[https://leiningen.org/][~leiningen~]] from the command-line:
+
+#+BEGIN_SRC bash
+lein run
+#+END_SRC
+
+In the context above, the server is available at url: ~http//localhost:3666/~. By default, the REST service runs on port ~3666~ on the local machine. However, the user may choose an alternative port by supplying a valid port at the command-line:
+
+#+BEGIN_SRC bash
+lein run 4000 # run server on http//localhost:4000/
+#+END_SRC
+
+**** Production
+The project may alternatively by as a compiled java ~jar~:
+
+#+BEGIN_SRC bash
+lein uberjar # compile
+java -jar <path-to-jar>
+#+END_SRC
+
+**** Docker
+# TODO: add docker support
+
+*** Communicating with the Service
+Please see the api description document included in `docs/api.md`.
+
+# TODO: create sample messages
+Please note sample `json` messages are included in the `samples/` directory at the root of this repository.
+
+*** Testing
+Tests are run from the command-line as follows:
+
+#+BEGIN_SRC bash
+lein test
+#+END_SRC
+
+
+
+# TODO: add design documentation
+** Design
