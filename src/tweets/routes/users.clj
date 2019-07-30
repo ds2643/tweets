@@ -61,6 +61,20 @@
         (jdbc/query query)
         seq boolean)))
 
+;; TODO: test
+(defn password-valid?
+  [{:as user-info :keys [email password]} db-connection]
+  (let [body  {:select [:password]
+               :from   [:users]
+               :where  [:= :email email]}
+        query (sql/format body)
+        result
+        (-> db-connection
+            (jdbc/query query)
+            first )]
+    (when result
+      (= (:password result) password))))
+
 (defn sign-up
   "Creates an entry in `test-db` `user` table with data
   supplied by user-info, returning the generated id."
@@ -73,11 +87,13 @@
 
         :else (create-user user-info db-connection)))
 
+;; TODO: check password
 (defn sign-in
   "Searches `test-db` `user` table for match associated
   with user-info, returning the generated id if successful."
   [{:keys [email password] :as user-info} db-connection]
   ;; TODO: Use `cond` as above to address incomplete user-info case
-  (if (user-exists? user-info db-connection)
+  (if (and (user-exists? user-info db-connection)
+           (password-valid? user-info db-connection))
     (get-user-id user-info db-connection)
     (throw (Exception. "User does not exist!"))))

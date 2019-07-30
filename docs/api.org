@@ -1,0 +1,62 @@
+* Communicating with ~tweets~ API
+~tweets~ exposes a rest interface that may be used for authentication and querying of tweet data. This document details the different routes available, which are intended to be used in sequence:
+
+Please see the ~samples/~ directory for example messages.
+
+** ~POST~ ~/sign-up~
+Initially, a user must create an account with an email and password to use the querying functionality. A ~jwt~ token is created:
+
+In the following example, the user sends their email and password to the service:
+
+#+BEGIN_SRC json
+{
+    "user-info": {
+        "email": "peter@sagan.com",
+        "password": "green-jersey"
+    }
+}
+#+END_SRC
+
+As a result, a new user is added to the db.
+
+Please note that trying to add the sample user again (equality is based on email) results in an error.
+
+** ~GET~ ~/sign-in~
+Next, an already-created user can sign-in for a new ~jwt~ token using the ~/sign-in~ route, which also accepts a ~user-info~ map:
+
+#+BEGIN_SRC json
+{
+    "user-info": {
+        "email": "peter@sagan.com",
+        "password": "green-jersey"
+    }
+}
+#+END_SRC
+
+Again, a token is returned as a result.
+
+Attempting to sign-in with an invalid account results in an error.
+
+** ~/query-tweets~
+Finally, a valid ~jwt~ may be used to query the tweet data persisted in the database.
+
+An empty query returns all tweets:
+
+#+BEGIN_SRC json
+{
+    "token": "some-token",
+}
+#+END_SRC
+
+Next, searching by _a single_ hashtag or author filters for that hashtag and author:
+#+BEGIN_SRC json
+{
+    "token": "some-token",
+    "query-params": {
+        "hashtag": "#bora-hansgrohe",
+        "author": "peter-segan"
+    }
+}
+#+END_SRC
+
+Please note that queries for text and timestamp have not yet been implemented.
