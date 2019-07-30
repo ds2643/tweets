@@ -17,8 +17,6 @@
 (defn find-hashtags [text]
   (into #{} (re-seq #"\#\w+" text)))
 
-;; TODO: manage test credentials
-;; TODO: clean!
 (def my-creds
   (let [app-consumer-key         (System/getenv "CONSUMER_KEY")
         app-consumer-secret      (System/getenv "CONSUMER_SECRET")

@@ -16,7 +16,14 @@ Running in development requires several dependencies be installed on the local m
 Alternatively, ~docker~ may be used to manage dependencies and run the project.
 
 *** Configuration
-# TODO: add twitter keys
+The twitter streaming support requires setting some environment variables:
+
+#+BEGIN_SRC
+export CONSUMER_KEY=<...>
+export CONSUMER_SECRET=<...>
+export ACCESS_TOKEN=<...>
+export ACCESS_TOKEN_SECRET=<...>
+#+END_SRC
 
 *** Running the project
 Running the project starts the collection of tweets by the project's ~consumer~ component. Tweets matching a set of predefined hashtags ("#tech", "#photography", and "#funny") are persisted in a local ~sqlite~ database. The querying of this database is supported by the ~tweets~ server, which implements ~jwt~ authentication.
