@@ -19,22 +19,12 @@
         result (jdbc/query db-connection query)]
     (into #{} (map :email result))))
 
-#_
-(get-existing-users db/test-db)
-
-;; TODO: move to common
 (defn user-exists? [{:keys [email] :as user-info}
                     db-connection]
   (let [existing-users (get-existing-users db-connection)]
     (contains? existing-users email)))
 
-#_
-(user-exists? {:email "ds2643@columbia.edu"} db/test-db)
-
-#_
-(user-exists? {:email "peter-sagan@columbia.edu"} db/test-db)
-
-;; TODO: encrypt password
+;; TODO: note issue: password should be stored securely
 (defn create-user [{:as user-info :keys [email password]}
                    db-connection]
   (let [table       :users
@@ -48,13 +38,6 @@
         outcome     (jdbc/execute! db-connection statement)]
     new-user-id))
 
-#_
-(let [user-config
-      {:email     "ads2643@columbia.edu"
-       :password  "potato"}]
-  (create-user user-config db/test-db))
-
-;; Procedures supporting public handlers
 ;; TODO: add docstring
 (defn sign-up [{:keys [email password] :as user-info}
                db-connection]
@@ -80,10 +63,6 @@
         (jdbc/query query)
         first :id)))
 
-#_
-(get-user-id {:email "d@a.coim"} db/test-db)
-
-
 (defn valid-id? [id db-connection]
   (let [body  {:select [:id]
                :from   [:users]
@@ -92,9 +71,6 @@
     (-> db-connection
         (jdbc/query query)
         seq boolean)))
-
-#_
-(valid-id? "bwfNr-Gk7sC-WAQbb" db/test-db)
 
 (defn sign-in
   [{:keys [email password] :as user-info} db-connection]

@@ -3,9 +3,7 @@
   (:require
    [clojure.java.jdbc :as jdbc]
    [clojure.string :as str]
-   [honeysql.core :as sql]
-   ;; TODO: dev dependency
-   [tweets.db :as db]))
+   [honeysql.core :as sql]))
 
 (defn includes-hashtag? [hashtag tweet]
   (let [hashtag-set (into #{} (str/split (:hashtags tweet) #"\,"))]
@@ -22,12 +20,6 @@
 (defn query-tweets
   [{:keys [hashtag author] :as query-params}
    db-connection]
-  (cond->> (get-all-tweet-content db/test-db)
+  (cond->> (get-all-tweet-content db-connection)
     hashtag (filter (partial includes-hashtag? hashtag))
     author  (filter #(= (:author %) author))))
-
-#_
-(query-tweets {:author "zhiraamani"} db/test-db)
-
-#_
-(query-tweets {:hashtag "#photography"} db/test-db)

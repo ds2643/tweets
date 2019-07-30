@@ -1,5 +1,5 @@
 * Tweets
-This repository contains a Clojure project supported by SQLite that persists and allows for the querying of tweets matching predefined hashtags.
+This repository contains a ~clojure~ project supported by SQLite that persists and allows for the querying of tweets matching predefined hashtags.
 
 More specifically, the service does the following:
   1. Collects tweets matching a set of predefined hashtags from the twitter streaming api.
@@ -22,7 +22,7 @@ Alternatively, ~docker-compose~ may be used to manage dependencies and run the p
 Running the project starts the collection of tweets by the project's ~consumer~ component. Tweets matching a set of predefined hashtags ("#tech", "#photography", and "#funny") are persisted in a local ~sqlite~ database. The querying of this database is supported by the ~tweets~ server, which implements ~jwt~ authentication.
 
 *** Database migration
-Schema migration is managed using a Clojure library called [`ragtime`](https://github.com/weavejester/ragtime), which is integrated into the Clojure project definition.
+Schema migration is managed using a Clojure library called [~ragtime~](https://github.com/weavejester/ragtime), which is integrated into the Clojure project definition.
 
 To perform schema migration, run the following command from the root of the project directory:
 
@@ -61,10 +61,10 @@ java -jar <path-to-jar>
 # TODO: add docker support
 
 *** Communicating with the Service
-Please see the api description document included in `docs/api.md`.
+Please see the api description document included in ~docs/api.org~.
 
 # TODO: create sample messages
-Please note sample `json` messages are included in the `samples/` directory at the root of this repository.
+Please note sample ~json~ messages are included in the ~samples/~ directory at the root of this repository.
 
 *** Testing
 Tests are run from the command-line as follows:
@@ -74,3 +74,5 @@ lein test
 #+END_SRC
 
 # TODO: add design documentation
+
+** Issues and Limitations

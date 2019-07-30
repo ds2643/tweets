@@ -20,10 +20,13 @@
 ;; TODO: manage test credentials
 ;; TODO: clean!
 (def my-creds
-  (let [app-consumer-key         "IuTTfeKRMK0390EXVTM3uKCEV"
-        app-consumer-secret      "WGMqWzkTWAYWtMmdL4g19NNGK5ljXlkC9yDdHBJ8TNCwrEJrPJ"
-        user-access-token        "1155215826410180609-JD3z5s46L4W0ZNligesxdKL8nTpYhL"
-        user-access-token-secret "ef4annZvIYGYp84nNDgK4JipzjvKp4z2l11OudnwyAUZF"]
+  (let [app-consumer-key  "IuTTfeKRMK0390EXVTM3uKCEV"
+        app-consumer-secret
+        "WGMqWzkTWAYWtMmdL4g19NNGK5ljXlkC9yDdHBJ8TNCwrEJrPJ"
+        user-access-token
+        "1155215826410180609-JD3z5s46L4W0ZNligesxdKL8nTpYhL"
+        user-access-token-secret
+        "ef4annZvIYGYp84nNDgK4JipzjvKp4z2l11OudnwyAUZF"]
     (oauth/make-oauth-creds app-consumer-key  app-consumer-secret
                             user-access-token user-access-token-secret)))
 
@@ -34,10 +37,6 @@
   (let [ht (into #{} (map (partial str "#") hashtags))]
     (fn includes-hashtags? [text]
       (boolean (seq (set/intersection ht (find-hashtags text)))))))
-
-#_
-(let [my-filter (make-hashtag-filter hashtags)]
-  (my-filter "hello #tech"))
 
 (defn make-stream []
   (let [search-params {:track (str/join "," hashtags)}]
@@ -62,10 +61,6 @@
          (filter in-english?)
          process-tweets)))
 
-#_
-(def example-tweet
-  {:author "Lucas19082", :date-created "Sun Jul 28 04:00:59 +0000 2019", :text "RT @NerolRose: Glow\n\nBy @normyip \n#maleportrait #photography #malephotography #art #sensuality #youth #muscles #asianhunk #AsianEarpers #as…", :hashtags #{"#youth" "#art" "#photography" "#as" "#AsianEarpers" "#maleportrait" "#sensuality" "#asianhunk" "#muscles" "#malephotography"}})
-
 (defn add-tweet-to-db
   [{:as tweet :keys [author date-created text hashtags]}
    db-connection]
@@ -82,19 +77,12 @@
                             sql/format)]
     (jdbc/execute! db-connection statement)))
 
-#_
-(add-tweet-to-db example-tweet db/test-db)
-
 ;; TODO: add doc-string
 (defn collect-tweets [db-connection]
   (let [stream (make-stream)]
     (do (client/start-twitter-stream stream)
-        ;; TODO: requires concurrency solution
         (future
           (doseq [n (range)]
             (Thread/sleep 500)
             (doseq [tweet (get-filtered-tweets stream)]
               (add-tweet-to-db tweet db-connection)))))))
-
-#_
-(collect-tweets db/test-db)
