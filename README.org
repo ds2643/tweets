@@ -67,9 +67,10 @@ java -jar <path-to-jar>
 **** Docker
 This project features docker support.
 
+Please be sure to pass twitter authentication environment variables into the container (using an env-file is recommended).
 #+BEGIN_SRC bash
 docker build -t tweets .
-docker run --rm -p 3666:3666 tweets
+docker run --env-file <path-to-env-file-with-twitter-auth> --rm -p 3666:3666 tweets
 #+END_SRC
 
 Kill by searching and destroying ~tweets~ docker process:
