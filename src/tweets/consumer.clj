@@ -20,13 +20,10 @@
 ;; TODO: manage test credentials
 ;; TODO: clean!
 (def my-creds
-  (let [app-consumer-key  "IuTTfeKRMK0390EXVTM3uKCEV"
-        app-consumer-secret
-        "WGMqWzkTWAYWtMmdL4g19NNGK5ljXlkC9yDdHBJ8TNCwrEJrPJ"
-        user-access-token
-        "1155215826410180609-JD3z5s46L4W0ZNligesxdKL8nTpYhL"
-        user-access-token-secret
-        "ef4annZvIYGYp84nNDgK4JipzjvKp4z2l11OudnwyAUZF"]
+  (let [app-consumer-key         (System/getenv "CONSUMER_KEY")
+        app-consumer-secret      (System/getenv "CONSUMER_SECRET")
+        user-access-token        (System/getenv "ACCESS_TOKEN")
+        user-access-token-secret (System/getenv "ACCESS_TOKEN_SECRET")]
     (oauth/make-oauth-creds app-consumer-key  app-consumer-secret
                             user-access-token user-access-token-secret)))
 
