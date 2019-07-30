@@ -26,4 +26,5 @@
   :profiles
   {:dev
    {:plugins
-    [[jonase/eastwood "0.3.5"]]}})
+    [[lein-dockerfile "1.0.0"]
+     [jonase/eastwood "0.3.5"]]}})

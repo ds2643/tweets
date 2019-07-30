@@ -13,7 +13,7 @@ Running in development requires several dependencies be installed on the local m
 2. ~java~ version 8 or later
 3. [[https://www.sqlite.org/][~sqlite3~]]
 
-Alternatively, ~docker-compose~ may be used to manage dependencies and run the project.
+Alternatively, ~docker~ may be used to manage dependencies and run the project.
 
 *** Configuration
 # TODO: add twitter keys
@@ -58,12 +58,23 @@ java -jar <path-to-jar>
 #+END_SRC
 
 **** Docker
-# TODO: add docker support
+This project features docker support.
+
+#+BEGIN_SRC bash
+docker build -t tweets .
+docker run --rm -p 3666:3666 tweets
+#+END_SRC
+
+Kill by searching and destroying ~tweets~ docker process:
+#+BEGIN_SRC bash
+docker ps
+... # shows processes; identify hash
+docker kill <hash>
+#+END_SRC
 
 *** Communicating with the Service
 Please see the api description document included in ~docs/api.org~.
 
-# TODO: create sample messages
 Please note sample ~json~ messages are included in the ~samples/~ directory at the root of this repository.
 
 *** Testing
@@ -73,6 +84,5 @@ Tests are run from the command-line as follows:
 lein test
 #+END_SRC
 
-# TODO: add design documentation
-
-** Issues and Limitations
+** Issues and Limitations:
+Please see github issue tracker.
